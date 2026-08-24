@@ -25,7 +25,7 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 16.0
-offset_top = -96.0
+offset_top = -120.0
 offset_right = 300.0
 offset_bottom = -16.0
 theme_override_constants/margin_left = 8
@@ -49,7 +49,12 @@ text = "AMMO: 30 / 30"
 [node name="BotsLabel" type="Label" parent="Margin/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Bots left: 0"
+text = "Enemies active: 0"
+
+[node name="KillsLabel" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Kills: 0"
 
 [node name="DeathOverlay" type="ColorRect" parent="."]
 visible = false

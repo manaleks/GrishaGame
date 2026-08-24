@@ -12,13 +12,17 @@ extends CharacterBody3D
 @onready var health: Health = $Health
 @onready var eyes: Marker3D = $Eyes
 @onready var vision_ray: RayCast3D = $Eyes/VisionRay
-@onready var mesh: MeshInstance3D = $Mesh
+@onready var model: Node3D = $Model
+@onready var leg_l: MeshInstance3D = $Model/LegL
+@onready var leg_r: MeshInstance3D = $Model/LegR
+@onready var arm_l: MeshInstance3D = $Model/ArmL
 @onready var shot_sound: AudioStreamPlayer3D = $ShotSound
 
 var player: Node3D = null
 var _fire_cooldown: float = 0.0
 var _last_known_player_pos: Vector3 = Vector3.ZERO
 var _has_seen_player: bool = false
+var _walk_phase: float = 0.0
 
 func _ready() -> void:
 	add_to_group("bots")
@@ -72,6 +76,20 @@ func _physics_process(delta: float) -> void:
 		_fire_cooldown -= delta
 
 	move_and_slide()
+	_animate_walk(delta)
+
+func _animate_walk(delta: float) -> void:
+	var speed := Vector2(velocity.x, velocity.z).length()
+	if speed > 0.3:
+		_walk_phase += delta * speed * 3.2
+		var swing := sin(_walk_phase) * 0.55
+		leg_l.rotation.x = swing
+		leg_r.rotation.x = -swing
+		arm_l.rotation.x = -swing * 0.6
+	else:
+		leg_l.rotation.x = move_toward(leg_l.rotation.x, 0, delta * 4.0)
+		leg_r.rotation.x = move_toward(leg_r.rotation.x, 0, delta * 4.0)
+		arm_l.rotation.x = move_toward(arm_l.rotation.x, 0, delta * 4.0)
 
 func _can_see_player() -> bool:
 	if player == null:
@@ -113,9 +131,10 @@ func apply_hit(amount: int, _pos: Vector3) -> void:
 
 func _on_died() -> void:
 	set_physics_process(false)
-	if mesh:
-		mesh.rotation.z = deg_to_rad(90)
+	if model:
+		model.rotation.z = deg_to_rad(90)
+		model.position.y -= 0.5
 	collision_layer = 0
 	collision_mask = 1
-	await get_tree().create_timer(3.0).timeout
+	await get_tree().create_timer(4.0).timeout
 	queue_free()
