@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/bot.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/health.gd" id="2"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_bot"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_bot"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_bot"]
+albedo_color = Color(0.8, 0.2, 0.2, 1)
+
+[node name="Bot" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_bot")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("CapsuleMesh_bot")
+surface_material_override/0 = SubResource("Mat_bot")
+
+[node name="Eyes" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+
+[node name="VisionRay" type="RayCast3D" parent="Eyes"]
+target_position = Vector3(0, 0, -25)
+collision_mask = 3
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("2")
+max_health = 100
