@@ -13,6 +13,7 @@ extends CharacterBody3D
 @onready var eyes: Marker3D = $Eyes
 @onready var vision_ray: RayCast3D = $Eyes/VisionRay
 @onready var mesh: MeshInstance3D = $Mesh
+@onready var shot_sound: AudioStreamPlayer3D = $ShotSound
 
 var player: Node3D = null
 var _fire_cooldown: float = 0.0
@@ -95,6 +96,8 @@ func _try_fire(delta: float) -> void:
 	if _fire_cooldown > 0.0:
 		return
 	_fire_cooldown = fire_interval
+	shot_sound.pitch_scale = randf_range(0.95, 1.08)
+	shot_sound.play()
 	if player and player.has_method("apply_hit"):
 		var space_state := get_world_3d().direct_space_state
 		var from := eyes.global_transform.origin

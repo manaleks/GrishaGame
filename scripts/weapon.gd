@@ -12,11 +12,15 @@ class_name Weapon
 
 @onready var muzzle: Marker3D = $Muzzle
 @onready var raycast: RayCast3D = $Muzzle/RayCast3D
+@onready var muzzle_flash: OmniLight3D = $Muzzle/MuzzleFlash
+@onready var flash_mesh: MeshInstance3D = $Muzzle/FlashMesh
+@onready var shot_sound: AudioStreamPlayer3D = $ShotSound
 
 var ammo: int
 var _cooldown: float = 0.0
 var _reloading: bool = false
 var _reload_timer: float = 0.0
+var _flash_timer: float = 0.0
 
 signal fired(ammo_left: int)
 signal reloaded(ammo_left: int)
@@ -37,6 +41,11 @@ func _process(delta: float) -> void:
 			_reloading = false
 			ammo = magazine_size
 			reloaded.emit(ammo)
+	if _flash_timer > 0.0:
+		_flash_timer -= delta
+		if _flash_timer <= 0.0:
+			muzzle_flash.visible = false
+			flash_mesh.visible = false
 
 func can_fire() -> bool:
 	return not _reloading and _cooldown <= 0.0 and ammo > 0
@@ -49,6 +58,12 @@ func try_fire(is_moving: bool, camera: Camera3D) -> void:
 	_cooldown = fire_rate
 	ammo -= 1
 	fired.emit(ammo)
+	_flash_timer = 0.05
+	muzzle_flash.visible = true
+	flash_mesh.visible = true
+	flash_mesh.rotation.z = randf() * TAU
+	shot_sound.pitch_scale = randf_range(0.95, 1.08)
+	shot_sound.play()
 
 	var spread_deg := base_spread_deg + (move_spread_deg if is_moving else 0.0)
 	var spread_rad := deg_to_rad(spread_deg)
