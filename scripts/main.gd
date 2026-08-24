@@ -3,6 +3,7 @@ extends Node3D
 const BOT_SCENE := preload("res://scenes/bot.tscn")
 const MAX_ALIVE := 5
 const RESPAWN_DELAY := 3.0
+const PLAYER_RESPAWN_DELAY := 3.0
 const MIN_SPAWN_DIST_FROM_PLAYER := 14.0
 
 @onready var player: CharacterBody3D = $Player
@@ -11,7 +12,7 @@ const MIN_SPAWN_DIST_FROM_PLAYER := 14.0
 
 var _alive_count: int = 0
 var _kills: int = 0
-var _game_over: bool = false
+var _deaths: int = 0
 
 func _ready() -> void:
 	player.add_to_group("player")
@@ -32,8 +33,6 @@ func _pick_spawn_point() -> Marker3D:
 	return candidates[0]
 
 func _spawn_one_bot() -> void:
-	if _game_over:
-		return
 	var spawn := _pick_spawn_point()
 	var bot := BOT_SCENE.instantiate()
 	bot.global_transform = spawn.global_transform
@@ -47,15 +46,16 @@ func _on_bot_died() -> void:
 	_kills += 1
 	hud.set_bots_alive(_alive_count)
 	hud.set_kills(_kills)
-	if not _game_over:
-		var t := get_tree().create_timer(RESPAWN_DELAY)
-		t.timeout.connect(_spawn_one_bot)
+	var t := get_tree().create_timer(RESPAWN_DELAY)
+	t.timeout.connect(_spawn_one_bot)
 
 func _on_player_died() -> void:
-	_game_over = true
+	_deaths += 1
 	hud.show_death()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	var t := get_tree().create_timer(PLAYER_RESPAWN_DELAY)
+	t.timeout.connect(_on_player_respawn)
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel") and player.health.is_dead():
-		get_tree().reload_current_scene()
+func _on_player_respawn() -> void:
+	player.respawn()
+	hud.hide_death()

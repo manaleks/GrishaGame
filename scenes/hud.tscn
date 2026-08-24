@@ -74,6 +74,6 @@ offset_top = -20.0
 offset_right = 220.0
 offset_bottom = 20.0
 theme_override_font_sizes/font_size = 28
-text = "YOU DIED — press ESC to restart"
+text = "YOU DIED — respawning..."
 horizontal_alignment = 1
 vertical_alignment = 1

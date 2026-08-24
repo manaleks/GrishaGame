@@ -119,3 +119,9 @@ func start_reload() -> void:
 		return
 	_reloading = true
 	_reload_timer = reload_time
+
+func reset_ammo() -> void:
+	_reloading = false
+	_cooldown = 0.0
+	ammo = magazine_size
+	reloaded.emit(ammo)

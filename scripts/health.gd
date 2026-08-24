@@ -24,3 +24,7 @@ func heal(amount: int) -> void:
 
 func is_dead() -> bool:
 	return current_health <= 0
+
+func revive() -> void:
+	current_health = max_health
+	changed.emit(current_health, max_health)

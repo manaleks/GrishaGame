@@ -16,6 +16,7 @@ extends CharacterBody3D
 var _crouching: bool = false
 var standing_height: float
 var crouch_height: float = 1.0
+var _spawn_transform: Transform3D
 
 signal died
 signal health_changed(current: int, max: int)
@@ -23,6 +24,7 @@ signal ammo_changed(current: int, max: int)
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	_spawn_transform = global_transform
 	standing_height = (collision.shape as CapsuleShape3D).height
 	weapon.owner_body = self
 	weapon.fired.connect(_on_weapon_fired)
@@ -73,6 +75,13 @@ func _physics_process(delta: float) -> void:
 
 func apply_hit(amount: int, _pos: Vector3) -> void:
 	health.apply_damage(amount)
+
+func respawn() -> void:
+	global_transform = _spawn_transform
+	velocity = Vector3.ZERO
+	health.revive()
+	weapon.reset_ammo()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _on_weapon_fired(ammo_left: int) -> void:
 	ammo_changed.emit(ammo_left, weapon.magazine_size)
