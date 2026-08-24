@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3]
+[gd_scene load_steps=28 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2"]
@@ -97,6 +97,24 @@ height = 4.0
 [sub_resource type="StandardMaterial3D" id="PillarMat"]
 albedo_color = Color(0.55, 0.53, 0.5, 1)
 roughness = 0.7
+
+[sub_resource type="BoxShape3D" id="PlatformShape"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxMesh" id="PlatformMesh"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="RustMat"]
+albedo_color = Color(0.36, 0.19, 0.13, 1)
+albedo_texture = SubResource("NoiseTex_floor")
+roughness = 0.85
+uv1_scale = Vector3(4, 4, 1)
+
+[sub_resource type="StandardMaterial3D" id="PlatformMat"]
+albedo_color = Color(0.34, 0.36, 0.38, 1)
+albedo_texture = SubResource("NoiseTex_floor")
+roughness = 0.8
+uv1_scale = Vector3(3, 3, 1)
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1")
@@ -294,28 +312,6 @@ shape = SubResource("CrateShape")
 mesh = SubResource("CrateMesh")
 surface_material_override/0 = SubResource("CrateMat")
 
-[node name="Crate6" type="StaticBody3D" parent="Cover"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 1, -22)
-collision_layer = 1
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cover/Crate6"]
-shape = SubResource("CrateShape")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/Crate6"]
-mesh = SubResource("CrateMesh")
-surface_material_override/0 = SubResource("CrateMat")
-
-[node name="Crate7" type="StaticBody3D" parent="Cover"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1, -24)
-collision_layer = 1
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cover/Crate7"]
-shape = SubResource("CrateShape")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/Crate7"]
-mesh = SubResource("CrateMesh")
-surface_material_override/0 = SubResource("CrateMat")
-
 [node name="Crate8" type="StaticBody3D" parent="Cover"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -28)
 collision_layer = 1
@@ -349,28 +345,6 @@ shape = SubResource("CrateShape")
 mesh = SubResource("CrateMesh")
 surface_material_override/0 = SubResource("CrateMat")
 
-[node name="Pillar1" type="StaticBody3D" parent="Cover"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2, -17)
-collision_layer = 1
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cover/Pillar1"]
-shape = SubResource("PillarShape")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/Pillar1"]
-mesh = SubResource("PillarMesh")
-surface_material_override/0 = SubResource("PillarMat")
-
-[node name="Pillar2" type="StaticBody3D" parent="Cover"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2, -18)
-collision_layer = 1
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cover/Pillar2"]
-shape = SubResource("PillarShape")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/Pillar2"]
-mesh = SubResource("PillarMesh")
-surface_material_override/0 = SubResource("PillarMat")
-
 [node name="Pillar3" type="StaticBody3D" parent="Cover"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -22)
 collision_layer = 1
@@ -379,6 +353,144 @@ collision_layer = 1
 shape = SubResource("PillarShape")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/Pillar3"]
+mesh = SubResource("PillarMesh")
+surface_material_override/0 = SubResource("PillarMat")
+
+[node name="Structures" type="Node3D" parent="."]
+
+[node name="Warehouse" type="Node3D" parent="Structures"]
+
+[node name="WallNorth" type="StaticBody3D" parent="Structures/Warehouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2, -26)
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Structures/Warehouse/WallNorth"]
+transform = Transform3D(8, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("WallShapeUnit")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Warehouse/WallNorth"]
+transform = Transform3D(8, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("WallMeshUnit")
+surface_material_override/0 = SubResource("RustMat")
+
+[node name="WallWest" type="StaticBody3D" parent="Structures/Warehouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 2, -22)
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Structures/Warehouse/WallWest"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 8, 0, 0, 0)
+shape = SubResource("WallShapeUnit")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Warehouse/WallWest"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 8, 0, 0, 0)
+mesh = SubResource("WallMeshUnit")
+surface_material_override/0 = SubResource("RustMat")
+
+[node name="WallEast" type="StaticBody3D" parent="Structures/Warehouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 2, -22)
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Structures/Warehouse/WallEast"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 8, 0, 0, 0)
+shape = SubResource("WallShapeUnit")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Warehouse/WallEast"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 8, 0, 0, 0)
+mesh = SubResource("WallMeshUnit")
+surface_material_override/0 = SubResource("RustMat")
+
+[node name="WallSouthA" type="StaticBody3D" parent="Structures/Warehouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.6, 2, -18)
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Structures/Warehouse/WallSouthA"]
+transform = Transform3D(2.8, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("WallShapeUnit")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Warehouse/WallSouthA"]
+transform = Transform3D(2.8, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("WallMeshUnit")
+surface_material_override/0 = SubResource("RustMat")
+
+[node name="WallSouthB" type="StaticBody3D" parent="Structures/Warehouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.4, 2, -18)
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Structures/Warehouse/WallSouthB"]
+transform = Transform3D(2.8, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("WallShapeUnit")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Warehouse/WallSouthB"]
+transform = Transform3D(2.8, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("WallMeshUnit")
+surface_material_override/0 = SubResource("RustMat")
+
+[node name="Roof" type="StaticBody3D" parent="Structures/Warehouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 4.15, -22)
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Structures/Warehouse/Roof"]
+transform = Transform3D(8.4, 0, 0, 0, 0.3, 0, 0, 0, 8.4, 0, 0, 0)
+shape = SubResource("PlatformShape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Warehouse/Roof"]
+transform = Transform3D(8.4, 0, 0, 0, 0.3, 0, 0, 0, 8.4, 0, 0, 0)
+mesh = SubResource("PlatformMesh")
+surface_material_override/0 = SubResource("RustMat")
+
+[node name="InteriorLight" type="OmniLight3D" parent="Structures/Warehouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.6, -22)
+light_color = Color(1, 0.65, 0.35, 1)
+light_energy = 1.6
+omni_range = 7.0
+
+[node name="Tower" type="Node3D" parent="Structures"]
+
+[node name="Ramp" type="StaticBody3D" parent="Structures/Tower"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.7, -21.5)
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Structures/Tower/Ramp"]
+transform = Transform3D(2.5, 0, 0, 0, 0.2697, 0.1311, 0, 3.401, -6.997, 0, 0, 0)
+shape = SubResource("PlatformShape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Tower/Ramp"]
+transform = Transform3D(2.5, 0, 0, 0, 0.2697, 0.1311, 0, 3.401, -6.997, 0, 0, 0)
+mesh = SubResource("PlatformMesh")
+surface_material_override/0 = SubResource("PlatformMat")
+
+[node name="Platform" type="StaticBody3D" parent="Structures/Tower"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.2, -28)
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Structures/Tower/Platform"]
+transform = Transform3D(6, 0, 0, 0, 0.4, 0, 0, 0, 6, 0, 0, 0)
+shape = SubResource("PlatformShape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Tower/Platform"]
+transform = Transform3D(6, 0, 0, 0, 0.4, 0, 0, 0, 6, 0, 0, 0)
+mesh = SubResource("PlatformMesh")
+surface_material_override/0 = SubResource("PlatformMat")
+
+[node name="Support1" type="StaticBody3D" parent="Structures/Tower"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 1.6, -26.5)
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Structures/Tower/Support1"]
+shape = SubResource("PillarShape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Tower/Support1"]
+mesh = SubResource("PillarMesh")
+surface_material_override/0 = SubResource("PillarMat")
+
+[node name="Support2" type="StaticBody3D" parent="Structures/Tower"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 1.6, -29.5)
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Structures/Tower/Support2"]
+shape = SubResource("PillarShape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Tower/Support2"]
 mesh = SubResource("PillarMesh")
 surface_material_override/0 = SubResource("PillarMat")
 
@@ -403,9 +515,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -32)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, -31)
 
 [node name="Spawn6" type="Marker3D" parent="BotSpawns"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0, -14)
 
 [node name="Spawn7" type="Marker3D" parent="BotSpawns"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, -13)
+
+[node name="Spawn8" type="Marker3D" parent="BotSpawns"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -21)
 
 [node name="HUD" parent="." instance=ExtResource("3")]
