@@ -1,6 +1,8 @@
 extends Node3D
 class_name Weapon
 
+const TracerScene := preload("res://scenes/tracer.tscn")
+
 @export var damage: int = 25
 @export var fire_rate: float = 0.11 # seconds between shots
 @export var magazine_size: int = 30
@@ -21,6 +23,7 @@ var _cooldown: float = 0.0
 var _reloading: bool = false
 var _reload_timer: float = 0.0
 var _flash_timer: float = 0.0
+var _recoil: float = 0.0
 
 signal fired(ammo_left: int)
 signal reloaded(ammo_left: int)
@@ -47,6 +50,18 @@ func _process(delta: float) -> void:
 			muzzle_flash.visible = false
 			flash_mesh.visible = false
 
+	_recoil = move_toward(_recoil, 0.0, delta * 7.0)
+
+	var reload_prog: float = 0.0
+	if _reloading:
+		reload_prog = 1.0 - (_reload_timer / reload_time)
+	var dip := sin(clamp(reload_prog, 0.0, 1.0) * PI) * 0.16
+	var tilt := sin(clamp(reload_prog, 0.0, 1.0) * PI) * 0.5
+
+	position.y = -dip
+	position.z = _recoil * 0.05
+	rotation.x = tilt - _recoil * 0.12
+
 func can_fire() -> bool:
 	return not _reloading and _cooldown <= 0.0 and ammo > 0
 
@@ -59,6 +74,7 @@ func try_fire(is_moving: bool, camera: Camera3D) -> void:
 	ammo -= 1
 	fired.emit(ammo)
 	_flash_timer = 0.05
+	_recoil = 1.0
 	muzzle_flash.visible = true
 	flash_mesh.visible = true
 	flash_mesh.rotation.z = randf() * TAU
@@ -80,14 +96,23 @@ func try_fire(is_moving: bool, camera: Camera3D) -> void:
 	var query := PhysicsRayQueryParameters3D.create(from, to)
 	query.exclude = [owner_body.get_rid()] if owner_body else []
 	var result := space_state.intersect_ray(query)
+	var impact_point := to
 	if result:
+		impact_point = result.get("position")
 		var collider = result.get("collider")
 		if collider and collider.has_method("apply_hit"):
-			collider.apply_hit(damage, result.get("position"))
+			collider.apply_hit(damage, impact_point)
 		hit_target.emit(collider, damage)
+
+	_spawn_tracer(muzzle.global_transform.origin, impact_point)
 
 	if ammo == 0:
 		start_reload()
+
+func _spawn_tracer(from: Vector3, to: Vector3) -> void:
+	var tracer := TracerScene.instantiate()
+	get_tree().current_scene.add_child(tracer)
+	tracer.setup(from, to)
 
 func start_reload() -> void:
 	if _reloading or ammo == magazine_size:
