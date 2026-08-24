@@ -1,8 +1,9 @@
-[gd_scene load_steps=28 format=3]
+[gd_scene load_steps=29 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/pause_menu.tscn" id="4"]
 
 [sub_resource type="FastNoiseLite" id="Noise_floor"]
 noise_type = 1
@@ -524,3 +525,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, -13)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -21)
 
 [node name="HUD" parent="." instance=ExtResource("3")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("4")]

@@ -1,0 +1,98 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/pause_menu.gd" id="1"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+script = ExtResource("1")
+
+[node name="Overlay" type="ColorRect" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.75)
+mouse_filter = 0
+
+[node name="MainPanel" type="VBoxContainer" parent="Overlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -100.0
+offset_right = 110.0
+offset_bottom = 100.0
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Overlay/MainPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="Overlay/MainPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Resume"
+
+[node name="SettingsButton" type="Button" parent="Overlay/MainPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="Overlay/MainPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Quit"
+
+[node name="SettingsPanel" type="VBoxContainer" parent="Overlay"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -130.0
+offset_right = 160.0
+offset_bottom = 130.0
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Overlay/SettingsPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="SensLabel" type="Label" parent="Overlay/SettingsPanel"]
+layout_mode = 2
+text = "Mouse sensitivity"
+
+[node name="SensSlider" type="HSlider" parent="Overlay/SettingsPanel"]
+layout_mode = 2
+min_value = 0.0005
+max_value = 0.006
+step = 0.0001
+value = 0.0025
+
+[node name="VolLabel" type="Label" parent="Overlay/SettingsPanel"]
+layout_mode = 2
+text = "Volume"
+
+[node name="VolSlider" type="HSlider" parent="Overlay/SettingsPanel"]
+layout_mode = 2
+min_value = 0.0
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="FullscreenCheck" type="CheckButton" parent="Overlay/SettingsPanel"]
+layout_mode = 2
+text = "Fullscreen"
+
+[node name="BackButton" type="Button" parent="Overlay/SettingsPanel"]
+layout_mode = 2
+text = "Back"

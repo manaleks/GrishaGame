@@ -8,6 +8,7 @@ const MIN_SPAWN_DIST_FROM_PLAYER := 14.0
 
 @onready var player: CharacterBody3D = $Player
 @onready var hud: CanvasLayer = $HUD
+@onready var pause_menu: CanvasLayer = $PauseMenu
 @onready var bot_spawns: Node3D = $BotSpawns
 
 var _alive_count: int = 0
@@ -19,6 +20,7 @@ func _ready() -> void:
 	player.health_changed.connect(hud.set_health)
 	player.ammo_changed.connect(hud.set_ammo)
 	player.died.connect(_on_player_died)
+	pause_menu.player = player
 	hud.set_health(player.health.max_health, player.health.max_health)
 	hud.set_kills(_kills)
 	for i in range(MAX_ALIVE):
